@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DocuMind — Enterprise Document Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+        </div>
+        <div class="brand-info">
+          <h2>DocuMind</h2>
+          <span class="subtext">Enterprise AI DocOps</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          Dashboard
+        </a>
+        <a href="#" class="nav-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          Invoices
+        </a>
+        <a href="#" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          Reviews
+          <span class="badge-count">1</span>
+        </a>
+        <a href="#" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Vendors
+        </a>
+        <a href="#" class="nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Reports
+        </a>
+        <a href="#" class="nav-item" onclick="switchTab('benchmark'); return false;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          ML Benchmark
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="model-badge">
+          <span class="status-indicator"></span>
+          <div>
+            <div class="model-name">PyTorch DL + OCR</div>
+            <div class="model-meta" id="deviceMeta">Device: Local CUDA/CPU</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Top Action Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <a href="#" class="back-link" onclick="loadSample('sample_invoice.pdf'); return false;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Back to invoices
+          </a>
+          <div class="doc-title-row">
+            <h1 id="docTitle">INV-2026-00432.pdf</h1>
+            <div class="status-badges">
+              <span class="pill-badge status-review" id="reviewBadge">Needs review</span>
+              <span class="pill-badge conf-score" id="confBadge">87% confidence</span>
+              <span class="pill-badge status-trusted" id="trustedBadge">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Trusted
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Sample Selector -->
+          <div class="sample-picker-group">
+            <label>Load Sample:</label>
+            <select id="sampleSelect" onchange="loadSelectedSample(this.value)">
+              <option value="sample_invoice.pdf">Reference Invoice (Summit Tech, $10,013.13)</option>
+              <option value="sample_receipt.pdf">Retail Receipt (Star Coffee, $31.81)</option>
+              <option value="sample_form.pdf">IRS Form W-9 (Acme Co.)</option>
+              <option value="sample_contract.pdf">Legal MSA Contract Agreement</option>
+            </select>
+          </div>
+
+          <label class="btn btn-secondary upload-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Upload PDF/Image
+            <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.tiff" style="display: none;" onchange="handleFileUpload(event)">
+          </label>
+
+          <button class="btn btn-secondary" onclick="markAsPaid()">Mark as Paid</button>
+          <button class="btn btn-primary" onclick="approveDocument()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Approve
+          </button>
+        </div>
+      </header>
+
+      <!-- Center Dual Pane Area -->
+      <div class="workspace-split">
+        <!-- Left Pane: Interactive Document Viewer -->
+        <section class="doc-viewer-panel">
+          <div class="viewer-toolbar">
+            <div class="page-nav">
+              <button class="icon-btn" onclick="prevPage()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <span id="pageIndicator">1 / 1</span>
+              <button class="icon-btn" onclick="nextPage()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="zoom-controls">
+              <button class="icon-btn" onclick="zoomOut()">-</button>
+              <span id="zoomLevel">100%</span>
+              <button class="icon-btn" onclick="zoomIn()">+</button>
+            </div>
+
+            <div class="tool-actions">
+              <button class="icon-btn" title="Toggle Bounding Boxes" onclick="toggleBoxes()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+              </button>
+              <button class="icon-btn" title="Fit to Screen" onclick="fitToScreen()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Document Canvas with Bounding Boxes -->
+          <div class="viewer-canvas-wrap" id="canvasWrap">
+            <div class="doc-page-container" id="pageContainer">
+              <img id="pageImg" class="doc-page-img" alt="Document Page">
+              <!-- Interactive Bounding Boxes Overlay -->
+              <div id="bboxOverlay" class="bbox-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Traceable Callout Bar -->
+          <div class="traceable-footer">
+            <div class="trace-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <div>
+              <strong>Traceable to source</strong>
+              <span>Click any field on the right to see exactly where it came from in the document.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Pane: Structured Extractions & Analytics -->
+        <section class="extraction-panel">
+          <!-- Tabs Navigation -->
+          <div class="panel-tabs">
+            <button class="tab-btn active" id="tab-fields" onclick="switchTab('fields')">Extracted fields</button>
+            <button class="tab-btn" id="tab-lines" onclick="switchTab('lines')">Line items <span class="badge" id="linesCount">3</span></button>
+            <button class="tab-btn" id="tab-benchmark" onclick="switchTab('benchmark')">Model Evaluation</button>
+            <button class="tab-btn" id="tab-json" onclick="switchTab('json')">JSON Response</button>
+          </div>
+
+          <!-- Tab Content: Extracted Fields -->
+          <div class="tab-content active" id="view-fields">
+            <div class="trace-banner">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              All values are traceable to the source document. Click any field to highlight where it was found.
+            </div>
+
+            <!-- Group: Document Classification -->
+            <div class="field-group">
+              <div class="group-title">DOCUMENT CLASSIFICATION</div>
+              <div class="field-row" onclick="highlightField('classification')">
+                <span class="field-label">Predicted Type</span>
+                <span class="field-value highlight-category" id="valCategory">Invoice</span>
+                <span class="field-conf" id="confCategory">99.8%</span>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Classification Model</span>
+                <span class="field-value" id="valModel">PyTorch Neural Transformer</span>
+                <span class="field-conf" id="confLatency">17.2 ms</span>
+              </div>
+            </div>
+
+            <!-- Group: Primary Identifiers -->
+            <div class="field-group">
+              <div class="group-title" id="primaryGroupTitle">INVOICE</div>
+              <div class="field-row" onclick="highlightField('invoice_number')">
+                <span class="field-label">Invoice number</span>
+                <span class="field-value" id="valDocId">INV-2026-00432</span>
+                <span class="field-conf" id="confDocId">96%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('invoice_date')">
+                <span class="field-label">Invoice date</span>
+                <span class="field-value" id="valDate">May 20, 2026</span>
+                <span class="field-conf" id="confDate">98%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('due_date')">
+                <span class="field-label">Due date</span>
+                <span class="field-value" id="valDueDate">Jun 19, 2026</span>
+                <span class="field-conf" id="confDueDate">96%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('total_amount')">
+                <span class="field-label">Total amount</span>
+                <span class="field-value val-total" id="valTotal">USD $10,013.13</span>
+                <span class="field-conf" id="confTotal">96%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('currency')">
+                <span class="field-label">Currency</span>
+                <span class="field-value" id="valCurrency">USD</span>
+                <span class="field-conf">100%</span>
+              </div>
+            </div>
+
+            <!-- Group: Vendor -->
+            <div class="field-group">
+              <div class="group-title">VENDOR</div>
+              <div class="field-row" onclick="highlightField('vendor_name')">
+                <span class="field-label">Vendor name</span>
+                <span class="field-value" id="valVendorName">Summit Technologies LLC</span>
+                <span class="field-conf" id="confVendorName">95%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('vendor_address')">
+                <span class="field-label">Vendor address</span>
+                <span class="field-value" id="valVendorAddr">345 Innovation Way, Suite 200, Denver, CO 80202</span>
+                <span class="field-conf" id="confVendorAddr">94%</span>
+              </div>
+            </div>
+
+            <!-- Group: Bill To -->
+            <div class="field-group">
+              <div class="group-title">BILL TO</div>
+              <div class="field-row" onclick="highlightField('customer_name')">
+                <span class="field-label">Customer name</span>
+                <span class="field-value" id="valCustName">Acme Co.</span>
+                <span class="field-conf" id="confCustName">98%</span>
+              </div>
+              <div class="field-row" onclick="highlightField('billing_address')">
+                <span class="field-label">Billing address</span>
+                <span class="field-value" id="valCustAddr">123 Market Street, Floor 4, San Francisco, CA 94105</span>
+                <span class="field-conf" id="confCustAddr">97%</span>
+              </div>
+            </div>
+
+            <!-- Validation Status Box -->
+            <div class="validation-box" id="validationBox">
+              <div class="validation-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Cross-Field Validation & Math Integrity</span>
+              </div>
+              <div class="validation-detail" id="validationText">
+                Subtotal ($9,250.00) + Tax ($763.13) = Total Due ($10,013.13) exact match. All temporal and identifier constraints passed.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content: Line Items -->
+          <div class="tab-content" id="view-lines">
+            <div class="table-container">
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th>DESCRIPTION</th>
+                    <th class="num-col">QTY</th>
+                    <th class="num-col">UNIT PRICE</th>
+                    <th class="num-col">AMOUNT</th>
+                  </tr>
+                </thead>
+                <tbody id="lineItemsBody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab Content: Model Evaluation & Benchmark -->
+          <div class="tab-content" id="view-benchmark">
+            <div class="bench-intro">
+              <h3>Empirical Model Evaluation & Comparison</h3>
+              <p>Independent benchmark measured on <strong>held-out unseen enterprise documents</strong> comparing a classical Scikit-Learn baseline against a PyTorch Deep Learning sequence model.</p>
+            </div>
+
+            <div class="benchmark-grid">
+              <!-- Baseline Model Card -->
+              <div class="bench-card">
+                <div class="card-header">
+                  <h4>Baseline Model</h4>
+                  <span class="badge-algo">TF-IDF + Logistic Reg</span>
+                </div>
+                <div class="metric-row">
+                  <span>Accuracy</span>
+                  <strong id="b-acc">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro Precision</span>
+                  <strong id="b-prec">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro Recall</span>
+                  <strong id="b-rec">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro F1-Score</span>
+                  <strong id="b-f1">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Mean Latency</span>
+                  <strong id="b-lat">3.19 ms</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Training Time</span>
+                  <strong id="b-train">0.26s</strong>
+                </div>
+              </div>
+
+              <!-- Deep Learning Model Card -->
+              <div class="bench-card highlight-card">
+                <div class="card-header">
+                  <h4>Deep Learning Model</h4>
+                  <span class="badge-algo badge-dl">PyTorch Transformer</span>
+                </div>
+                <div class="metric-row">
+                  <span>Accuracy</span>
+                  <strong id="dl-acc">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro Precision</span>
+                  <strong id="dl-prec">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro Recall</span>
+                  <strong id="dl-rec">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Macro F1-Score</span>
+                  <strong id="dl-f1">100.0%</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Mean Latency</span>
+                  <strong id="dl-lat">17.25 ms</strong>
+                </div>
+                <div class="metric-row">
+                  <span>Device Hardware</span>
+                  <strong>CUDA / CPU</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Field Extraction Metrics Table -->
+            <div class="field-bench-section">
+              <h4>Field Extraction Exact Match & Token F1</h4>
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th>EXTRACTED FIELD</th>
+                    <th class="num-col">EXACT MATCH</th>
+                    <th class="num-col">TOKEN F1</th>
+                  </tr>
+                </thead>
+                <tbody id="fieldBenchBody">
+                  <!-- Injected dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab Content: JSON Response -->
+          <div class="tab-content" id="view-json">
+            <div class="json-actions">
+              <button class="btn btn-secondary btn-sm" onclick="copyJson()">Copy JSON</button>
+            </div>
+            <pre class="json-viewer" id="jsonViewer">// Structured JSON will appear here</pre>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{
+  "dataset_info": {
+    "categories": [
+      "invoice",
+      "receipt",
+      "form",
+      "other"
+    ],
+    "total_samples": 240,
+    "train_samples": 192,
+    "test_samples": 48,
+    "test_ratio": 0.2
+  },
+  "models": {
+    "baseline": {
+      "model_name": "Baseline (TF-IDF + Logistic Regression)",
+      "accuracy": 1.0,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "mean_latency_ms": 3.19,
+      "p95_latency_ms": 4.09,
+      "training_time_s": 0.261,
+      "confusion_matrix": {
+        "labels": [
+          "invoice",
+          "receipt",
+          "form",
+          "other"
+        ],
+        "matrix": [
+          [
+            8,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            18,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            10
+          ]
+        ]
+      },
+      "per_class_metrics": {
+        "invoice": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 8
+        },
+        "receipt": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 12
+        },
+        "form": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 18
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 10
+        }
+      }
+    },
+    "deep_learning": {
+      "model_name": "Deep Learning (PyTorch Attention Transformer)",
+      "accuracy": 1.0,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "mean_latency_ms": 17.25,
+      "p95_latency_ms": 18.16,
+      "training_time_s": 13.615,
+      "confusion_matrix": {
+        "labels": [
+          "invoice",
+          "receipt",
+          "form",
+          "other"
+        ],
+        "matrix": [
+          [
+            8,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            12,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            18,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            10
+          ]
+        ]
+      },
+      "per_class_metrics": {
+        "invoice": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 8
+        },
+        "receipt": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 12
+        },
+        "form": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 18
+        },
+        "other": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1_score": 1.0,
+          "support": 10
+        }
+      }
+    }
+  },
+  "summary": {
+    "accuracy_delta": 0.0,
+    "f1_delta": 0.0,
+    "winner": "deep_learning"
+  }
+}

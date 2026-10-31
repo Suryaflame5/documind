@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  documind:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: documind-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+    restart: unless-stopped
