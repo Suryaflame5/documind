@@ -21,6 +21,6 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Model artifacts (optional large binaries if not tracked)
-*.pt
+# Model artifacts
 *.bin
+!artifacts/models/*.pt
