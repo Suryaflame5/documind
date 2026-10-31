@@ -13,43 +13,44 @@ class DocumentFieldExtractor:
     def __init__(self):
         # Precise Document ID patterns (specific structured IDs first)
         self.doc_id_patterns = [
-            r"\b(INV-\d{4}-\d{4,6}|RCPT-\d{4,7}|FRM-\d{4}-\d{4,6}|AGR-\d{4}-\d{4,6})\b",
-            r"(?i)(?:invoice\s*#|invoice\s*no\.?|invoice\s*number|invoice\s*id|inv\s*#)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
+            r"\b([A-Z]{3,8}-\d{4}-\d{4,6}|RCPT-\d{4,7}|FRM-\d{4}-\d{4,6}|AGR-\d{4}-\d{4,6})\b",
+            r"(?i)(?:invoice\s*ref(?:erence)?|invoice\s*#|invoice\s*no\.?|invoice\s*number|invoice\s*id|inv\s*#)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
             r"(?i)(?:receipt\s*#|receipt\s*no\.?|rcpt\s*#)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
             r"(?i)(?:form\s*(?:reference\s*id|#|no\.?)|official\s*document\s*reference)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
-            r"(?i)(?:agreement\s*(?:id|#)|document\s*reference)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
+            r"(?i)(?:agreement\s*(?:id|#)|document\s*reference|document\s*id)\s*[:\-]?\s*([A-Z0-9\-_/]{4,25})",
         ]
         
         # Date patterns
         self.date_patterns = [
-            r"(?i)(?:invoice\s*date|date|dated|issue\s*date|certification\s*date|effective\s*date)\s*[:\-]?\s*([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4})",
-            r"(?i)(?:invoice\s*date|date|dated|issue\s*date)\s*[:\-]?\s*(\d{4}[-/.]\d{1,2}[-/.]\d{1,2})",
-            r"(?i)(?:invoice\s*date|date|dated|issue\s*date)\s*[:\-]?\s*(\d{1,2}[-/.]\d{1,2}[-/.]\d{4})",
+            r"(?i)(?:date\s*of\s*supply|invoice\s*date|date|dated|issue\s*date|certification\s*date|effective\s*date)\s*[:\-]?\s*([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4})",
+            r"(?i)(?:date\s*of\s*supply|invoice\s*date|date|dated|issue\s*date)\s*[:\-]?\s*(\d{4}[-/.]\d{1,2}[-/.]\d{1,2})",
+            r"(?i)(?:date\s*of\s*supply|invoice\s*date|date|dated|issue\s*date)\s*[:\-]?\s*(\d{1,2}[-/.]\d{1,2}[-/.]\d{4})",
             r"\b([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4})\b",
             r"\b(\d{4}-\d{2}-\d{2})\b",
+            r"\b(\d{1,2}[-/.]\d{1,2}[-/.]\d{4})\b",
         ]
         
         # Due Date patterns
         self.due_date_patterns = [
-            r"(?i)(?:due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4})",
-            r"(?i)(?:due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*(\d{4}[-/.]\d{1,2}[-/.]\d{1,2})",
-            r"(?i)(?:due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*(\d{1,2}[-/.]\d{1,2}[-/.]\d{4})",
+            r"(?i)(?:payment\s*due\s*by|due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*([A-Za-z]{3,9}\s+\d{1,2},?\s+\d{4})",
+            r"(?i)(?:payment\s*due\s*by|due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*(\d{4}[-/.]\d{1,2}[-/.]\d{1,2})",
+            r"(?i)(?:payment\s*due\s*by|due\s*date|payment\s*due|pay\s*by)\s*[:\-]?\s*(\d{1,2}[-/.]\d{1,2}[-/.]\d{4})",
         ]
 
-        # Total Amount patterns (supports with/without commas and spaces)
+        # Total Amount patterns (supports with/without commas, currencies, and international formats)
         self.total_patterns = [
-            r"(?i)\b(?:total\s*due|total\s*amount|grand\s*total|balance\s*due)\s*[:\-]?\s*(?:usd|eur|gbp)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
-            r"(?i)(?<!sub)\btotal\s*[:\-]?\s*(?:usd|eur|gbp)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
+            r"(?i)\b(?:total\s*payable|amount\s*payable|total\s*due|total\s*amount|grand\s*total|balance\s*due)\s*[:\-]?\s*(?:usd|eur|gbp|chf)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
+            r"(?i)(?<!sub)\btotal\s*[:\-]?\s*(?:usd|eur|gbp|chf)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
         ]
 
         # Subtotal patterns
         self.subtotal_patterns = [
-            r"(?i)\b(?:subtotal|sub-total|net\s*amount)\s*[:\-]?\s*(?:usd|eur|gbp)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
+            r"(?i)\b(?:net\s*subtotal|subtotal|sub-total|net\s*amount)\s*[:\-]?\s*(?:usd|eur|gbp|chf)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
         ]
 
         # Tax patterns
         self.tax_patterns = [
-            r"(?i)\b(?:sales\s*tax|tax(?:\s*\([0-9.]+%\))?|vat)\s*[:\-]?\s*(?:usd|eur|gbp)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
+            r"(?i)\b(?:sales\s*tax|tax(?:\s*\([0-9.]+%\))?|vat(?:\s*\([0-9.]+%\))?)\s*[:\-]?\s*(?:usd|eur|gbp|chf)?\s*[$€£]?\s*([0-9,]+\.[0-9]{2})\b",
         ]
 
         # Currency patterns
@@ -59,7 +60,32 @@ class DocumentFieldExtractor:
             (r"(?i)\bGBP\b|£", "GBP"),
             (r"(?i)\bINR\b|₹", "INR"),
             (r"(?i)\bCAD\b", "CAD"),
+            (r"(?i)\bCHF\b", "CHF"),
         ]
+
+    def _clean_ocr_noise(self, text: str) -> str:
+        """
+        Enterprise OCR post-processing normalization:
+        Corrects common optical character confusions in numeric monetary amounts (e.g. $1O,OOO.OO -> $10,000.00).
+        """
+        def fix_num(match):
+            prefix = match.group(1)
+            raw_digits = match.group(2)
+            cleaned_digits = (
+                raw_digits.replace('O', '0')
+                          .replace('o', '0')
+                          .replace('l', '1')
+                          .replace('I', '1')
+                          .replace('|', '1')
+                          .replace('S', '5')
+                          .replace('s', '5')
+                          .replace('B', '8')
+            )
+            return f"{prefix}{cleaned_digits}"
+
+        # Match numbers following currency indicators or totals
+        pattern = re.compile(r"((?:[$€£]|USD|EUR|GBP|CHF|Total|Subtotal|Tax|VAT)[:\s]+)([0-9OoIl|SsB,]+\.[0-9OoIl|SsB]{2})\b", re.IGNORECASE)
+        return pattern.sub(fix_num, text)
 
     def _find_bbox_for_text(self, target_text: str, spans: List[OCRSpan]) -> Tuple[Optional[List[float]], int]:
         """
@@ -420,7 +446,9 @@ class DocumentFieldExtractor:
     def extract_all(self, text: str, spans: List[OCRSpan]) -> Tuple[Dict[str, FieldExtraction], List[LineItem]]:
         """
         Executes complete field extraction suite and returns structured dictionary and line items.
+        Applies OCR character post-processing normalization.
         """
+        text = self._clean_ocr_noise(text)
         doc_id = self.extract_document_id(text, spans)
         date_f, due_date_f = self.extract_dates(text, spans)
         tot_f, sub_f, tax_f = self.extract_amounts(text, spans)

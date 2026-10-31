@@ -80,6 +80,21 @@ def health_check():
     }
 
 
+@app.get("/api/v1/models/audit")
+def get_model_audit():
+    """
+    Returns empirical data leakage audit, out-of-distribution generalization benchmark,
+    and granular latency waterfall breakdown.
+    """
+    audit_path = settings.ARTIFACTS_DIR / "generalization_audit_report.json"
+    if not audit_path.exists():
+        raise HTTPException(status_code=404, detail="Audit report not found. Run documind/evaluation/audit.py first.")
+    
+    with open(audit_path, "r", encoding="utf-8") as f:
+        import json
+        return json.load(f)
+
+
 @app.get("/api/v1/models/benchmark")
 def get_model_benchmark():
     """
